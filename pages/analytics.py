@@ -35,7 +35,7 @@ L = {
     "ch_l":    {"bg": "Характеристика", "en": "Feature"},
 }
 
-def _(k, l): return L[k][l]
+def tr(k, l): return L[k][l]
 
 
 @st.cache_data
@@ -45,15 +45,15 @@ def load_data():
 
 def render(lang: str = "bg"):
     df = load_data()
-    st.markdown(f"### 📊 {_('title', lang)}")
-    st.caption(_("sub", lang))
+    st.markdown(f"### 📊 {tr('title', lang)}")
+    st.caption(tr("sub", lang))
 
     k1, k2, k3, k4, k5 = st.columns(5)
-    k1.metric(_("total", lang), len(df))
-    k2.metric(_("avg_p", lang), f"€ {df['price_eur'].mean():,.0f}")
-    k3.metric(_("med_p", lang), f"€ {df['price_eur'].median():,.0f}")
-    k4.metric(_("avg_a", lang), f"{df['area_sqm'].mean():.0f} м²")
-    k5.metric(_("avg_s", lang), f"€ {df['price_per_sqm'].mean():.0f}")
+    k1.metric(tr("total", lang), len(df))
+    k2.metric(tr("avg_p", lang), f"€ {df['price_eur'].mean():,.0f}")
+    k3.metric(tr("med_p", lang), f"€ {df['price_eur'].median():,.0f}")
+    k4.metric(tr("avg_a", lang), f"{df['area_sqm'].mean():.0f} м²")
+    k5.metric(tr("avg_s", lang), f"€ {df['price_per_sqm'].mean():.0f}")
     st.markdown("---")
 
     c1, c2 = st.columns(2)
@@ -62,7 +62,7 @@ def render(lang: str = "bg"):
             avg_price=("price_eur","mean"), count=("id","count"), avg_sqm=("price_per_sqm","mean")
         ).reset_index().sort_values("avg_price", ascending=False)
         fig = px.bar(city_avg, x="avg_price", y="city", orientation="h",
-                     title=_("c_city", lang),
+                     title=tr("c_city", lang),
                      color="avg_sqm", color_continuous_scale="Blues",
                      labels={"avg_price":"€","city":"","avg_sqm":"€/m²"},
                      text=city_avg["avg_price"].apply(lambda x:f"€{x:,.0f}"))
@@ -78,7 +78,7 @@ def render(lang: str = "bg"):
         tc = df["type_label"].value_counts().reset_index()
         tc.columns = ["type","count"]
         fig2 = px.pie(tc, values="count", names="type",
-                      title=_("c_type", lang),
+                      title=tr("c_type", lang),
                       color_discrete_sequence=px.colors.qualitative.Set2)
         fig2.update_layout(height=350, margin=dict(t=40,b=0),
                            paper_bgcolor="rgba(0,0,0,0)")
@@ -89,7 +89,7 @@ def render(lang: str = "bg"):
         fig3 = px.scatter(df, x="area_sqm", y="price_eur", color="city",
                           size="price_per_sqm", opacity=0.7,
                           hover_data=["type_bg","neighborhood","construction_type"],
-                          title=_("c_scat", lang),
+                          title=tr("c_scat", lang),
                           labels={"area_sqm":"m²","price_eur":"€","city":""})
         fig3.update_layout(height=350, margin=dict(t=40,b=10),
                            paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)")
@@ -98,7 +98,7 @@ def render(lang: str = "bg"):
     with c4:
         fig4 = px.box(df, x="construction_type", y="price_per_sqm",
                       color="construction_type",
-                      title=_("c_box", lang),
+                      title=tr("c_box", lang),
                       labels={"construction_type":"","price_per_sqm":"€/m²"},
                       color_discrete_sequence=px.colors.qualitative.Pastel)
         fig4.update_layout(height=350, margin=dict(t=40,b=10), showlegend=False,
@@ -107,8 +107,8 @@ def render(lang: str = "bg"):
 
     c5, c6 = st.columns(2)
     with c5:
-        fig5 = px.histogram(df, x="price_eur", nbins=30, title=_("c_hist", lang),
-                            labels={"price_eur":"€","count":_("nr_l",lang)},
+        fig5 = px.histogram(df, x="price_eur", nbins=30, title=tr("c_hist", lang),
+                            labels={"price_eur":"€","count":tr("nr_l",lang)},
                             color_discrete_sequence=["#1a5a8a"])
         fig5.update_layout(height=300, margin=dict(t=40,b=10),
                            paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)")
@@ -120,25 +120,25 @@ def render(lang: str = "bg"):
         fs = pd.Series(all_f).value_counts().head(12).reset_index()
         fs.columns = ["feature","count"]
         fig6 = px.bar(fs, x="count", y="feature", orientation="h",
-                      title=_("c_feat", lang), color="count",
+                      title=tr("c_feat", lang), color="count",
                       color_continuous_scale="Teal",
-                      labels={"count":_("nr_l",lang),"feature":_("ch_l",lang)})
+                      labels={"count":tr("nr_l",lang),"feature":tr("ch_l",lang)})
         fig6.update_layout(height=300, margin=dict(t=40,b=10), showlegend=False,
                            paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)")
         st.plotly_chart(fig6, use_container_width=True)
 
     st.markdown("---")
-    st.markdown(f"#### 📋 {_('tbl', lang)}")
+    st.markdown(f"#### 📋 {tr('tbl', lang)}")
     show = ["city","neighborhood","type_bg","area_sqm","price_eur","price_per_sqm",
             "floor","rooms","construction_type","days_listed"]
     ren = {
-        "city": _("city_l",lang), "neighborhood": _("nbh_l",lang),
-        "type_bg": _("type_l",lang), "area_sqm": _("area_l",lang),
-        "price_eur": _("price_l",lang), "price_per_sqm": _("sqm_l",lang),
-        "floor": _("fl_l",lang), "rooms": _("rm_l",lang),
-        "construction_type": _("cn_l",lang), "days_listed": _("dy_l",lang)
+        "city": tr("city_l",lang), "neighborhood": tr("nbh_l",lang),
+        "type_bg": tr("type_l",lang), "area_sqm": tr("area_l",lang),
+        "price_eur": tr("price_l",lang), "price_per_sqm": tr("sqm_l",lang),
+        "floor": tr("fl_l",lang), "rooms": tr("rm_l",lang),
+        "construction_type": tr("cn_l",lang), "days_listed": tr("dy_l",lang)
     }
     st.dataframe(df[show].rename(columns=ren), use_container_width=True, height=380)
 
     csv = df.to_csv(index=False).encode("utf-8")
-    st.download_button(_("dl", lang), csv, "bg_properties.csv", "text/csv")
+    st.download_button(tr("dl", lang), csv, "bg_properties.csv", "text/csv")

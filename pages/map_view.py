@@ -52,7 +52,7 @@ TYPE_COLORS = {
     "Офис": [149, 165, 166], "Гараж": [127, 140, 141],
 }
 
-def _(k, l): return L[k][l]
+def tr(k, l): return L[k][l]
 
 
 @st.cache_data
@@ -65,20 +65,20 @@ def load_map_data():
 
 
 def render(lang: str = "bg"):
-    st.markdown(f"### 🗺️ {_('title', lang)}")
-    tab_browse, tab_geo = st.tabs([_("browse", lang), _("geocode", lang)])
+    st.markdown(f"### 🗺️ {tr('title', lang)}")
+    tab_browse, tab_geo = st.tabs([tr("browse", lang), tr("geocode", lang)])
 
     with tab_browse:
         df = load_map_data()
         cf1, cf2, cf3 = st.columns(3)
         with cf1:
-            city_f = st.multiselect(_("city_f", lang), sorted(df["city"].unique()), default=[])
+            city_f = st.multiselect(tr("city_f", lang), sorted(df["city"].unique()), default=[])
         with cf2:
             type_opts = [(k + " / " + v if lang == "en" else k) for k, v in PROPERTY_TYPES.items()]
-            type_f_disp = st.multiselect(_("type_f", lang), type_opts, default=[])
+            type_f_disp = st.multiselect(tr("type_f", lang), type_opts, default=[])
             type_f = [t.split(" / ")[0] for t in type_f_disp]
         with cf3:
-            max_price = st.number_input(_("max_p", lang), value=600000, step=10000)
+            max_price = st.number_input(tr("max_p", lang), value=600000, step=10000)
 
         filt = df.copy()
         if city_f: filt = filt[filt["city"].isin(city_f)]
@@ -86,7 +86,7 @@ def render(lang: str = "bg"):
         filt = filt[filt["price_eur"] <= max_price]
 
         if len(filt) == 0:
-            st.warning(_("no_props", lang))
+            st.warning(tr("no_props", lang))
             return
 
         filt = filt.copy()
@@ -123,7 +123,7 @@ def render(lang: str = "bg"):
                 unsafe_allow_html=True
             )
 
-        st.markdown(f"**{len(filt)} {_('on_map', lang)}**")
+        st.markdown(f"**{len(filt)} {tr('on_map', lang)}**")
         show_cols = ["city","neighborhood","type_bg","area_sqm","price_eur","price_per_sqm"]
         renamed = {
             "city": "Град" if lang=="bg" else "City",
@@ -136,32 +136,32 @@ def render(lang: str = "bg"):
         st.dataframe(filt[show_cols].rename(columns=renamed), height=220, use_container_width=True)
 
     with tab_geo:
-        st.markdown(f"#### {_('gc_title', lang)}")
-        st.caption(_("gc_sub", lang))
+        st.markdown(f"#### {tr('gc_title', lang)}")
+        st.caption(tr("gc_sub", lang))
 
-        ex_opts = [_("gc_own", lang)] + EXAMPLE_TEXTS
-        sel_ex = st.selectbox(_("gc_ex", lang), ex_opts)
-        default_text = "" if sel_ex == _("gc_own", lang) else sel_ex
-        input_text = st.text_area(_("gc_area", lang), value=default_text,
-                                   height=130, placeholder=_("gc_ph", lang))
+        ex_opts = [tr("gc_own", lang)] + EXAMPLE_TEXTS
+        sel_ex = st.selectbox(tr("gc_ex", lang), ex_opts)
+        default_text = "" if sel_ex == tr("gc_own", lang) else sel_ex
+        input_text = st.text_area(tr("gc_area", lang), value=default_text,
+                                   height=130, placeholder=tr("gc_ph", lang))
 
-        if st.button(_("gc_btn", lang), type="primary"):
+        if st.button(tr("gc_btn", lang), type="primary"):
             if not input_text.strip():
-                st.warning(_("gc_warn", lang))
+                st.warning(tr("gc_warn", lang))
             else:
                 res = extract_location_from_text(input_text)
                 if res["found"]:
                     cr, cm = st.columns([1, 2])
                     with cr:
-                        st.success(_("gc_found", lang))
+                        st.success(tr("gc_found", lang))
                         st.markdown(f"""
-**{_('gc_city', lang)}:** {res['city'] or 'N/A'}
+**{tr('gc_city', lang)}:** {res['city'] or 'N/A'}
 
-**{_('gc_nbh', lang)}:** {res['neighborhood'] or ('Неизвестен' if lang=='bg' else 'Unknown')}
+**{tr('gc_nbh', lang)}:** {res['neighborhood'] or ('Неизвестен' if lang=='bg' else 'Unknown')}
 
-**{_('gc_coords', lang)}:** {res['lat']:.4f}, {res['lon']:.4f}
+**{tr('gc_coords', lang)}:** {res['lat']:.4f}, {res['lon']:.4f}
 
-**{_('gc_conf', lang)}:** {res['confidence_label']} ({res['confidence']*100:.0f}%)
+**{tr('gc_conf', lang)}:** {res['confidence_label']} ({res['confidence']*100:.0f}%)
 """)
                     with cm:
                         pt = pd.DataFrame([{"lat": res["lat"], "lon": res["lon"]}])
@@ -177,7 +177,7 @@ def render(lang: str = "bg"):
                         )
                         st.pydeck_chart(mini)
                 else:
-                    st.error(_("gc_fail", lang))
+                    st.error(tr("gc_fail", lang))
 
-        with st.expander(_("how_it", lang)):
-            st.markdown(_("how_txt", lang))
+        with st.expander(tr("how_it", lang)):
+            st.markdown(tr("how_txt", lang))
