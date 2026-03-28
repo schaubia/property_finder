@@ -80,16 +80,15 @@ st.markdown(f"""
     <span class="nav-pill">🔍 {'Търсене' if lang=='bg' else 'Search'}</span>
     <span class="nav-pill">🏦 {'Ипотека' if lang=='bg' else 'Mortgage'}</span>
     <span class="nav-pill">🗺️ {'Карта' if lang=='bg' else 'Map'}</span>
-    <span class="nav-pill">⚠️ {'Геориск' if lang=='bg' else 'Geo-Risk'}</span>
     <span class="nav-pill">📊 {'Анализи' if lang=='bg' else 'Analytics'}</span>
 </div>
 """, unsafe_allow_html=True)
 
-tabs_bg = ["🔍 Търсене", "🏦 Ипотека", "🗺️ Карта", "📊 Анализи", "⚠️ Геориск"]
-tabs_en = ["🔍 Search",  "🏦 Mortgage", "🗺️ Map",   "📊 Analytics", "⚠️ Geo-Risk"]
+tabs_bg = ["🔍 Търсене", "🏦 Ипотека", "🗺️ Карта", "📊 Анализи"]
+tabs_en = ["🔍 Search",  "🏦 Mortgage", "🗺️ Map",   "📊 Analytics"]
 tab_labels = tabs_bg if lang == "bg" else tabs_en
 
-tab1, tab2, tab3, tab4, tab5 = st.tabs(tab_labels)
+tab1, tab2, tab3, tab4 = st.tabs(tab_labels)
 
 with tab1:
     from pages import search
@@ -106,8 +105,3 @@ with tab3:
 with tab4:
     from pages import analytics
     analytics.render(lang)
-
-
-with tab5:
-    from pages import geo_risk
-    geo_risk.render(lang)
