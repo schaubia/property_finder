@@ -7,7 +7,9 @@ import json
 import datetime
 import os
 
-DB_PATH = os.path.join(os.path.dirname(__file__), "watchlist.db")
+_local_dir = os.path.dirname(__file__)
+_local_db = os.path.join(_local_dir, "watchlist.db")
+DB_PATH = _local_db if os.access(_local_dir, os.W_OK) else "/tmp/bg_watchlist.db"
 
 
 def _conn():

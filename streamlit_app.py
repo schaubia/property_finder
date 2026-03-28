@@ -1,3 +1,8 @@
+import sys
+import os
+# Ensure the project root is on the path (needed for Streamlit Cloud)
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
 import streamlit as st
 
 st.set_page_config(
