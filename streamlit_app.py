@@ -63,12 +63,12 @@ footer { visibility:hidden; }
 </style>
 """, unsafe_allow_html=True)
 
-col_head, col_lang = st.columns([6, 1])
-with col_lang:
-    toggle_label = "🇬🇧 EN" if lang == "bg" else "🇧🇬 БГ"
+with st.sidebar:
+    toggle_label = "🇬🇧 Switch to English" if lang == "bg" else "🇧🇬 Превключи на Български"
     if st.button(toggle_label, key="lang_btn", use_container_width=True):
         st.session_state["lang"] = "en" if lang == "bg" else "bg"
         st.rerun()
+    st.markdown("---")
 
 title    = "БГ Имоти" if lang == "bg" else "BG Property Finder"
 subtitle = "Намерете мечтания си дом в България" if lang == "bg" else "Find your dream home in Bulgaria"

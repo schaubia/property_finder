@@ -132,23 +132,45 @@ def render(lang: str = "bg"):
         st.markdown(f"#### 🏙️ {tr('city_cmp', lang)}")
 
         cities = list(CITY_HAZARD_SUMMARY.keys())
+
+        # Use fixed keys to avoid pandas/style issues with translated column names
+        col_overall   = tr("overall", lang)
+        col_seismic   = tr("seismic", lang)
+        col_flood     = tr("flood", lang)
+        col_radon     = tr("radon", lang)
+        col_landslide = tr("landslide", lang)
+
         records = []
         for city, h in CITY_HAZARD_SUMMARY.items():
             records.append({
-                "city": city,
-                tr("overall", lang):    round(h["composite_score"] * 100),
-                tr("seismic", lang):    round(h["seismic"]["score"] * 100),
-                tr("flood", lang):      round(h["flood"]["score"] * 100),
-                tr("radon", lang):      round(h["radon"]["score"] * 100),
-                tr("landslide", lang):  round(h["landslide"]["score"] * 100),
+                "🏙️": city,
+                col_overall:   round(h["composite_score"] * 100),
+                col_seismic:   round(h["seismic"]["score"] * 100),
+                col_flood:     round(h["flood"]["score"] * 100),
+                col_radon:     round(h["radon"]["score"] * 100),
+                col_landslide: round(h["landslide"]["score"] * 100),
             })
-        df = pd.DataFrame(records).set_index("city")
+        df = pd.DataFrame(records).set_index("🏙️")
 
-        # Heatmap-style table
-        st.dataframe(
-            df.style.background_gradient(cmap="RdYlGn_r", vmin=0, vmax=100),
-            use_container_width=True, height=370
+        # Plotly heatmap — more robust than df.style on Streamlit Cloud
+        import plotly.express as pxi
+        fig_heat = pxi.imshow(
+            df.values,
+            labels=dict(x="Risk", y="City", color="Score"),
+            x=df.columns.tolist(),
+            y=df.index.tolist(),
+            color_continuous_scale="RdYlGn_r",
+            zmin=0, zmax=100,
+            text_auto=True,
+            aspect="auto",
         )
+        fig_heat.update_layout(
+            height=340, margin=dict(t=20,b=20,l=10,r=10),
+            paper_bgcolor="rgba(0,0,0,0)",
+            coloraxis_showscale=False,
+            font=dict(size=11),
+        )
+        st.plotly_chart(fig_heat, use_container_width=True)
 
         # Radar chart for selected city
         st.markdown("---")
