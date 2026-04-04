@@ -68,7 +68,7 @@ def render(lang: str = "bg"):
                      text=city_avg["avg_price"].apply(lambda x:f"€{x:,.0f}"))
         fig.update_layout(height=350, margin=dict(t=40,b=10),
                           paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)")
-        st.plotly_chart(fig, width="stretch")
+        st.plotly_chart(fig, width="stretch", key="anal_fig")
 
     with c2:
         if lang == "en":
@@ -82,7 +82,7 @@ def render(lang: str = "bg"):
                       color_discrete_sequence=px.colors.qualitative.Set2)
         fig2.update_layout(height=350, margin=dict(t=40,b=0),
                            paper_bgcolor="rgba(0,0,0,0)")
-        st.plotly_chart(fig2, width="stretch")
+        st.plotly_chart(fig2, width="stretch", key="anal_fig2")
 
     c3, c4 = st.columns(2)
     with c3:
@@ -93,7 +93,7 @@ def render(lang: str = "bg"):
                           labels={"area_sqm":"m²","price_eur":"€","city":""})
         fig3.update_layout(height=350, margin=dict(t=40,b=10),
                            paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)")
-        st.plotly_chart(fig3, width="stretch")
+        st.plotly_chart(fig3, width="stretch", key="anal_fig3")
 
     with c4:
         fig4 = px.box(df, x="construction_type", y="price_per_sqm",
@@ -103,7 +103,7 @@ def render(lang: str = "bg"):
                       color_discrete_sequence=px.colors.qualitative.Pastel)
         fig4.update_layout(height=350, margin=dict(t=40,b=10), showlegend=False,
                            paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)")
-        st.plotly_chart(fig4, width="stretch")
+        st.plotly_chart(fig4, width="stretch", key="anal_fig4")
 
     c5, c6 = st.columns(2)
     with c5:
@@ -112,7 +112,7 @@ def render(lang: str = "bg"):
                             color_discrete_sequence=["#1a5a8a"])
         fig5.update_layout(height=300, margin=dict(t=40,b=10),
                            paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)")
-        st.plotly_chart(fig5, width="stretch")
+        st.plotly_chart(fig5, width="stretch", key="anal_fig5")
 
     with c6:
         all_f = []
@@ -125,7 +125,7 @@ def render(lang: str = "bg"):
                       labels={"count":tr("nr_l",lang),"feature":tr("ch_l",lang)})
         fig6.update_layout(height=300, margin=dict(t=40,b=10), showlegend=False,
                            paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)")
-        st.plotly_chart(fig6, width="stretch")
+        st.plotly_chart(fig6, width="stretch", key="anal_fig6")
 
     st.markdown("---")
     st.markdown(f"#### 📋 {tr('tbl', lang)}")

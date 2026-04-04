@@ -172,7 +172,7 @@ def render(lang: str = "bg"):
             coloraxis_showscale=False,
             font=dict(size=11),
         )
-        st.plotly_chart(fig_heat, width="stretch")
+        st.plotly_chart(fig_heat, width="stretch", key="geo_heat")
 
         # Radar for selected city
         st.markdown("---")
@@ -193,7 +193,7 @@ def render(lang: str = "bg"):
             title=f"{tr('radar_lbl',lang)} — {selected_city}",
             paper_bgcolor="rgba(0,0,0,0)",
         )
-        st.plotly_chart(fig_radar, width="stretch")
+        st.plotly_chart(fig_radar, width="stretch", key="geo_radar")
 
         c1, c2 = st.columns(2)
         with c1:
@@ -242,7 +242,7 @@ def render(lang: str = "bg"):
             ))
             fig_g.update_layout(height=195, margin=dict(t=30,b=0,l=20,r=20),
                                  paper_bgcolor="rgba(0,0,0,0)")
-            st.plotly_chart(fig_g, width="stretch")
+            st.plotly_chart(fig_g, width="stretch", key="geo_gauge")
 
             cc1, cc2 = st.columns(2)
             with cc1:
@@ -340,7 +340,7 @@ EU JRC Global Landslide Susceptibility.
                 labels={"mag": tr("mag",lang)})
             fig_qhist.update_layout(height=230, margin=dict(t=40,b=10),
                                     paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)")
-            st.plotly_chart(fig_qhist, width="stretch")
+            st.plotly_chart(fig_qhist, width="stretch", key="geo_qhist")
 
     # ── TAB 4: Risk map ────────────────────────────────────────────────────────
     with tab_map:
@@ -442,7 +442,7 @@ EU JRC Global Landslide Susceptibility.
         st.markdown("---")
 
         # Detail cards
-        for mine in sorted(URANIUM_MINES, key=lambda x: x["risk_score"], reverse=True):
+        for mine_idx, mine in enumerate(sorted(URANIUM_MINES, key=lambda x: x["risk_score"], reverse=True)):
             col  = CONTAMINATION_COLORS.get(mine["contamination_level"], [150,150,150])
             hx   = f"#{col[0]:02x}{col[1]:02x}{col[2]:02x}"
             name = mine["name_bg"] if lang=="bg" else mine["name"]
@@ -473,7 +473,7 @@ EU JRC Global Landslide Susceptibility.
                     ))
                     fig_mini.update_layout(height=155, margin=dict(t=22,b=0,l=8,r=8),
                                           paper_bgcolor="rgba(0,0,0,0)")
-                    st.plotly_chart(fig_mini, width="stretch")
+                    st.plotly_chart(fig_mini, width="stretch", key=f"mine_gauge_{mine_idx}")
 
         st.markdown("---")
         st.markdown(f"#### 📍 {'Провери конкретна точка' if lang=='bg' else 'Check a specific point'}")
