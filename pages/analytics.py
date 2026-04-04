@@ -68,7 +68,7 @@ def render(lang: str = "bg"):
                      text=city_avg["avg_price"].apply(lambda x:f"€{x:,.0f}"))
         fig.update_layout(height=350, margin=dict(t=40,b=10),
                           paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)")
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
 
     with c2:
         if lang == "en":
@@ -82,7 +82,7 @@ def render(lang: str = "bg"):
                       color_discrete_sequence=px.colors.qualitative.Set2)
         fig2.update_layout(height=350, margin=dict(t=40,b=0),
                            paper_bgcolor="rgba(0,0,0,0)")
-        st.plotly_chart(fig2, use_container_width=True)
+        st.plotly_chart(fig2, width="stretch")
 
     c3, c4 = st.columns(2)
     with c3:
@@ -93,7 +93,7 @@ def render(lang: str = "bg"):
                           labels={"area_sqm":"m²","price_eur":"€","city":""})
         fig3.update_layout(height=350, margin=dict(t=40,b=10),
                            paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)")
-        st.plotly_chart(fig3, use_container_width=True)
+        st.plotly_chart(fig3, width="stretch")
 
     with c4:
         fig4 = px.box(df, x="construction_type", y="price_per_sqm",
@@ -103,7 +103,7 @@ def render(lang: str = "bg"):
                       color_discrete_sequence=px.colors.qualitative.Pastel)
         fig4.update_layout(height=350, margin=dict(t=40,b=10), showlegend=False,
                            paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)")
-        st.plotly_chart(fig4, use_container_width=True)
+        st.plotly_chart(fig4, width="stretch")
 
     c5, c6 = st.columns(2)
     with c5:
@@ -112,7 +112,7 @@ def render(lang: str = "bg"):
                             color_discrete_sequence=["#1a5a8a"])
         fig5.update_layout(height=300, margin=dict(t=40,b=10),
                            paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)")
-        st.plotly_chart(fig5, use_container_width=True)
+        st.plotly_chart(fig5, width="stretch")
 
     with c6:
         all_f = []
@@ -125,7 +125,7 @@ def render(lang: str = "bg"):
                       labels={"count":tr("nr_l",lang),"feature":tr("ch_l",lang)})
         fig6.update_layout(height=300, margin=dict(t=40,b=10), showlegend=False,
                            paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)")
-        st.plotly_chart(fig6, use_container_width=True)
+        st.plotly_chart(fig6, width="stretch")
 
     st.markdown("---")
     st.markdown(f"#### 📋 {tr('tbl', lang)}")
@@ -138,7 +138,7 @@ def render(lang: str = "bg"):
         "floor": tr("fl_l",lang), "rooms": tr("rm_l",lang),
         "construction_type": tr("cn_l",lang), "days_listed": tr("dy_l",lang)
     }
-    st.dataframe(df[show].rename(columns=ren), use_container_width=True, height=380)
+    st.dataframe(df[show].rename(columns=ren), width="stretch", height=380)
 
     csv = df.to_csv(index=False).encode("utf-8")
     st.download_button(tr("dl", lang), csv, "bg_properties.csv", "text/csv")

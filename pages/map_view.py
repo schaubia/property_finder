@@ -133,7 +133,7 @@ def render(lang: str = "bg"):
             "price_eur": "€",
             "price_per_sqm": "€/м²"
         }
-        st.dataframe(filt[show_cols].rename(columns=renamed), height=220, use_container_width=True)
+        st.dataframe(filt[show_cols].rename(columns=renamed), height=220, width="stretch")
 
     with tab_geo:
         st.markdown(f"#### {tr('gc_title', lang)}")

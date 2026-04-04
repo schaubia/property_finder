@@ -65,7 +65,7 @@ footer { visibility:hidden; }
 
 with st.sidebar:
     toggle_label = "🇬🇧 Switch to English" if lang == "bg" else "🇧🇬 Превключи на Български"
-    if st.button(toggle_label, key="lang_btn", use_container_width=True):
+    if st.button(toggle_label, key="lang_btn", width="stretch"):
         st.session_state["lang"] = "en" if lang == "bg" else "bg"
         st.rerun()
     st.markdown("---")

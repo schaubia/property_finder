@@ -183,7 +183,7 @@ def render(lang: str = "bg"):
         ))
         fig_g.update_layout(height=185, margin=dict(t=28,b=0,l=20,r=20),
                              paper_bgcolor="rgba(0,0,0,0)")
-        st.plotly_chart(fig_g, use_container_width=True)
+        st.plotly_chart(fig_g, width="stretch")
 
         # Cost pie
         fig_pie = px.pie(
@@ -193,7 +193,7 @@ def render(lang: str = "bg"):
             title=tr("breakdown", lang)
         )
         fig_pie.update_layout(height=250, margin=dict(t=40,b=0), paper_bgcolor="rgba(0,0,0,0)")
-        st.plotly_chart(fig_pie, use_container_width=True)
+        st.plotly_chart(fig_pie, width="stretch")
 
         with st.expander(f"📈 {tr('amort', lang)}"):
             sched = pd.DataFrame(calculate_amortization_schedule(loan_eur, interest_rate, term_years))
@@ -208,7 +208,7 @@ def render(lang: str = "bg"):
                                  legend=dict(orientation="h", y=-0.3),
                                  xaxis_title="Year" if lang=="en" else "Година",
                                  yaxis_title="EUR")
-            st.plotly_chart(fig_a, use_container_width=True)
+            st.plotly_chart(fig_a, width="stretch")
 
         # ── Save scenario ──────────────────────────────────────────────────────
         st.markdown(f"---\n#### {tr('scen_hdr', lang)}")
@@ -326,7 +326,7 @@ def render(lang: str = "bg"):
             paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
             xaxis_title="EUR / " + ("месец" if lang=="bg" else "month")
         )
-        st.plotly_chart(fig_bar, use_container_width=True)
+        st.plotly_chart(fig_bar, width="stretch")
         st.caption(tr("disclaimer", lang))
 
         # ── Saved scenarios panel ──────────────────────────────────────────────
