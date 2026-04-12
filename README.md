@@ -158,11 +158,3 @@ The geocoding engine recognises listings mentioning:
 - [ ] Mobile-optimised layout
 
 ---
-
-## 📄 License
-
-MIT — free to use, modify and distribute.
-
----
-
-*Built with ❤️ for the Bulgarian property market · 2025*
