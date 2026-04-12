@@ -33,16 +33,6 @@ h1, h2, h3 { font-family: 'Playfair Display', serif !important; }
 }
 .main-header h1 { color: white !important; font-size: 2.2rem; margin: 0; letter-spacing: -0.5px; }
 .main-header p  { color: rgba(255,255,255,0.78); margin: 0.35rem 0 0; font-size: 0.97rem; }
-.nav-pill {
-    display: inline-block;
-    background: rgba(255,255,255,0.13);
-    border: 1px solid rgba(255,255,255,0.25);
-    border-radius: 20px;
-    padding: 3px 14px;
-    font-size: 0.78rem;
-    color: rgba(255,255,255,0.9);
-    margin: 0.7rem 4px 0 0;
-}
 .sidebar-box { background:#f4f7fb; border-radius:12px; padding:1rem 1rem 0.8rem; margin-bottom:0.9rem; }
 .sidebar-box h4 { color:#0d2d4e; margin:0 0 0.7rem; font-size:0.82rem; text-transform:uppercase; letter-spacing:0.6px; font-family:'DM Sans',sans-serif !important; font-weight:600; }
 .bank-card { background:white; border-radius:14px; padding:1rem 1.1rem; border:1.5px solid #e4eaf2; margin-bottom:0.75rem; transition:border-color 0.2s, box-shadow 0.2s; }
@@ -77,11 +67,6 @@ st.markdown(f"""
 <div class="main-header">
     <h1>🏠 {title}</h1>
     <p>{subtitle}</p>
-    <span class="nav-pill">🔍 {'Търсене' if lang=='bg' else 'Search'}</span>
-    <span class="nav-pill">🏦 {'Ипотека' if lang=='bg' else 'Mortgage'}</span>
-    <span class="nav-pill">🗺️ {'Карта' if lang=='bg' else 'Map'}</span>
-    <span class="nav-pill">⚠️ {'Геориск' if lang=='bg' else 'Geo-Risk'}</span>
-    <span class="nav-pill">📊 {'Анализи' if lang=='bg' else 'Analytics'}</span>
 </div>
 """, unsafe_allow_html=True)
 
