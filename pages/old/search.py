@@ -63,14 +63,6 @@ L = {
     "wl_count":   {"bg": "имота в списъка", "en": "properties in watchlist"},
     "wl_export":  {"bg": "⬇️ Изтегли списъка (CSV)", "en": "⬇️ Download watchlist (CSV)"},
     "source_lnk": {"bg": "🔗 Обява", "en": "🔗 Listing"},
-    "new_badge":  {"bg": "Нова", "en": "New"},
-    "added_lbl":  {"bg": "Добавено", "en": "Added"},
-    "saved_lbl":  {"bg": "Запазено", "en": "Saved"},
-    "wl_tab":          {"bg": "Моят списък", "en": "My Watchlist"},
-    "watchlist_title": {"bg": "Моят списък с имоти", "en": "My Property Watchlist"},
-    "click_fetch": {"bg": "Натиснете бутона за да заредите реални обяви от imot.bg и imoti.net",
-                    "en": "Click the button above to fetch real listings from imot.bg and imoti.net"},
-
 }
 
 def tr(k, l): return L[k][l]
@@ -88,7 +80,7 @@ def _property_card(row, lang, prefix="s", show_source=False):
         with col_info:
             badges = ""
             if row.get("is_new"):
-                badges += f'<span class="prop-badge badge-new">🆕 {tr("new_badge",lang)}</span>'
+                badges += '<span class="prop-badge badge-new">🆕 ' + ("Нова" if lang=="bg" else "New") + '</span>'
             if row.get("days_listed", 99) <= 3:
                 badges += '<span class="prop-badge badge-hot">🔥</span>'
             type_label = row.get("type_bg","") if lang=="bg" else row.get("type_en","")
@@ -154,7 +146,7 @@ def _property_card(row, lang, prefix="s", show_source=False):
 
 def render(lang: str = "bg"):
     wl_count = watchlist_count()
-    wl_label = f"❤️ {tr('wl_tab',lang)} ({wl_count})"
+    wl_label = f"❤️ {'Моят списък' if lang=='bg' else 'My Watchlist'} ({wl_count})"
     tab1, tab2, tab3 = st.tabs([
         tr("tab_sample", lang),
         tr("tab_live", lang),
@@ -277,17 +269,20 @@ def render(lang: str = "bg"):
                 for listing in listings:
                     _property_card(listing, lang, prefix="l", show_source=True)
         else:
-            st.info("👆 " + (tr('click_fetch', lang)))
+            st.info("👆 " + ("Натиснете бутона за да заредите реални обяви от imot.bg и imoti.net"
+                             if lang=="bg" else
+                             "Click the button above to fetch real listings from imot.bg and imoti.net"))
 
     # ── TAB 3: Watchlist ───────────────────────────────────────────────────────
     with tab3:
-        st.markdown(f"### ❤️ {tr('watchlist_title',lang)}")
+        st.markdown(f"### ❤️ {'Моят списък с имоти' if lang=='bg' else 'My Property Watchlist'}")
         wl = get_watchlist()
 
         if not wl:
             st.info(tr("wl_empty", lang))
         else:
-            st.metric(f"{len(wl)} " + tr("wl_count", lang), "")
+            st.metric(tr("wl_count" if lang=="bg" else "wl_count", lang),
+                      f"{len(wl)} " + tr("wl_count", lang))
             st.markdown("---")
 
             for item in wl:
@@ -298,7 +293,7 @@ def render(lang: str = "bg"):
                         s1,s2,s3 = st.columns(3)
                         s1.markdown(f"📐 {item['area_sqm']} м²")
                         s2.markdown(f"📅 {tr('wl_notes',lang) if False else item['listing_date']}")
-                        s3.markdown(f"🕐 {tr('added_lbl',lang)}: {item['added_at']}")
+                        s3.markdown(f"🕐 {('Добавено' if lang=='bg' else 'Added')}: {item['added_at']}")
 
                         notes_val = st.text_input(
                             tr("wl_notes", lang), value=item.get("notes",""),
@@ -306,7 +301,7 @@ def render(lang: str = "bg"):
                         )
                         if st.button(tr("wl_save_n", lang), key=f"wl_sn_{item['id']}"):
                             update_notes(item["prop_id"], notes_val)
-                            st.toast("✅ " + tr('saved_lbl', lang))
+                            st.toast("✅ " + ("Запазено" if lang=="bg" else "Saved"))
 
                     with wcol2:
                         st.markdown(f"""

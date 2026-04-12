@@ -64,15 +64,6 @@ L = {
     "life_ins":   {"bg": "Застр. живот", "en": "Life insurance"},
     "prop_ins":   {"bg": "Застр. имот", "en": "Property ins."},
     "req":        {"bg": "задлж.", "en": "required"},
-    "bnb_tip":    {"bg": "Типичната ипотечна лихва = БНБ референтен процент + марж на банката (~1.5-2%)",
-                   "en": "Typical mortgage rate = BNB reference rate + bank margin (~1.5–2%)"},
-    "cache_note": {"bg": "Данните се кешират за 1 час", "en": "Rates cached for 1 hour"},
-    "interest_lbl":{"bg": "лихви", "en": "interest"},
-    "year_lbl":   {"bg": "Година", "en": "Year"},
-    "month_lbl":  {"bg": "месец", "en": "month"},
-    "yr_short":   {"bg": "г.", "en": "yr"},
-    "mo_short":   {"bg": "мес", "en": "mo"},
-
     "opt":        {"bg": "незадлж.", "en": "optional"},
     # Scenarios
     "scen_hdr":   {"bg": "💾 Запази сценарий", "en": "💾 Save scenario"},
@@ -107,14 +98,14 @@ def render(lang: str = "bg"):
         src_icon = "🟢" if bnb["ok"] else "🟡"
         st.caption(f"{src_icon} {tr('bnb_src', lang)}: {bnb['source']}\n\n{bnb['fetched_at']}")
     with bnb_col3:
-        st.info(tr('bnb_tip', lang))
+        st.info(f"💡 {'Типичната ипотечна лихва = БНБ референтен процент + марж на банката (~1.5-2%)' if lang=='bg' else 'Typical mortgage rate = BNB reference rate + bank margin (~1.5–2%)'}")
 
     # ── Refresh + scrape row ──────────────────────────────────────────────────
     rc1, rc2 = st.columns([2, 4])
     with rc1:
         do_refresh = st.button(tr("scrape_btn", lang), type="secondary")
     with rc2:
-        st.caption("ℹ️ " + tr('cache_note', lang))
+        st.caption("ℹ️ " + ("Данните се кешират за 1 час" if lang=="bg" else "Rates cached for 1 hour"))
 
     if do_refresh:
         with st.spinner(tr("scraping", lang)):
@@ -174,7 +165,7 @@ def render(lang: str = "bg"):
         r1.metric(tr("monthly", lang), f"€ {costs['monthly_payment']:,.0f}",
                   f"{eur_to_bgn(costs['monthly_payment']):,.0f} лв.")
         r2.metric(tr("total", lang), f"€ {costs['total_payments']:,.0f}",
-                  f"{tr('interest_lbl',lang)}: €{costs['total_interest']:,.0f}")
+                  f"{'лихви' if lang=='bg' else 'interest'}: €{costs['total_interest']:,.0f}")
         r3.metric(tr("max_loan", lang), f"€ {max_loan:,.0f}")
 
         # Gauge
@@ -215,7 +206,7 @@ def render(lang: str = "bg"):
             fig_a.update_layout(height=280, margin=dict(t=10,b=20),
                                  paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
                                  legend=dict(orientation="h", y=-0.3),
-                                 xaxis_title=tr('year_lbl', lang),
+                                 xaxis_title="Year" if lang=="en" else "Година",
                                  yaxis_title="EUR")
             st.plotly_chart(fig_a, width="stretch", key="mort_fig_a")
 
@@ -301,8 +292,8 @@ def render(lang: str = "bg"):
                     <span class="{src_cls}">{src_badge}</span>
                   </div>
                   <div style="font-size:0.77rem;color:#333;margin-top:0.3rem;line-height:1.75;">
-                    💰 {tr("pmt_est",lang)} <strong>€ {monthly:,.0f}</strong> / {tr("mo_short",lang)}<br>
-                    📅 {tr("max_term",lang)}: {b['max_term_years']} {tr("yr_short",lang)} &nbsp;|&nbsp;
+                    💰 {tr("pmt_est",lang)} <strong>€ {monthly:,.0f}</strong> / {"мес" if lang=="bg" else "mo"}<br>
+                    📅 {tr("max_term",lang)}: {b['max_term_years']} {"г." if lang=="bg" else "yr"} &nbsp;|&nbsp;
                     🏠 {tr("max_ltv",lang)}: {b['max_ltv']}%<br>
                     📋 {tr("fee_lbl",lang)}: {b['processing_fee_pct']}% &nbsp;|&nbsp;
                     🏥 {tr("life_ins",lang)}: {ins_life}<br>
@@ -333,7 +324,7 @@ def render(lang: str = "bg"):
         fig_bar.update_layout(
             height=340, margin=dict(t=5,b=5,l=5,r=65),
             paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
-            xaxis_title="EUR / " + tr('month_lbl', lang)
+            xaxis_title="EUR / " + ("месец" if lang=="bg" else "month")
         )
         st.plotly_chart(fig_bar, width="stretch", key="mort_fig_bar")
         st.caption(tr("disclaimer", lang))
@@ -350,8 +341,8 @@ def render(lang: str = "bg"):
                     st.markdown(f"""
                     <div style="background:#f4f7fb;border-radius:8px;padding:0.5rem 0.7rem;margin-bottom:0.4rem;font-size:0.8rem;">
                       <strong>{sc['name']}</strong><br>
-                      €{sc['loan_eur']:,.0f} @ {sc['rate_pct']}% × {sc['term_years']}{tr("yr_short",lang)}
-                      → €{sc['monthly_pmt']:,.0f}/{tr("mo_short",lang)}<br>
+                      €{sc['loan_eur']:,.0f} @ {sc['rate_pct']}% × {sc['term_years']}{"г." if lang=="bg" else "yr"}
+                      → €{sc['monthly_pmt']:,.0f}/{"мес" if lang=="bg" else "mo"}<br>
                       <span style="color:#888;font-size:0.7rem;">{sc['created_at']}</span>
                     </div>
                     """, unsafe_allow_html=True)

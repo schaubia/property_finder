@@ -72,9 +72,6 @@ L = {
                     "en": "⚠️ Within contamination radius of a closed uranium mine."},
     "u_safe":      {"bg": "✅ Няма уранови мини наблизо (>28 км).",
                     "en": "✅ No uranium legacy sites within 28 km."},
-    "check_point_title": {"bg": "Провери конкретна точка", "en": "Check a specific point"},
-    "mag_dist_title":    {"bg": "Разпределение по магнитуд", "en": "Magnitude distribution"},
-    "yr_axis":           {"bg": "Година", "en": "Year"},
     "u_check_btn": {"bg": "☢️ Провери",                 "en": "☢️ Check"},
 }
 
@@ -338,7 +335,7 @@ EU JRC Global Landslide Susceptibility.
             )
 
             fig_qhist = px.histogram(df_quakes, x="mag", nbins=15,
-                title=tr('mag_dist_title', lang),
+                title="Magnitude distribution" if lang=="en" else "Разпределение по магнитуд",
                 color_discrete_sequence=["#1a5a8a"],
                 labels={"mag": tr("mag",lang)})
             fig_qhist.update_layout(height=230, margin=dict(t=40,b=10),
@@ -479,7 +476,7 @@ EU JRC Global Landslide Susceptibility.
                     st.plotly_chart(fig_mini, width="stretch", key=f"mine_gauge_{mine_idx}")
 
         st.markdown("---")
-        st.markdown(f"#### 📍 {tr('check_point_title', lang)}")
+        st.markdown(f"#### 📍 {'Провери конкретна точка' if lang=='bg' else 'Check a specific point'}")
         uc1, uc2 = st.columns(2)
         with uc1:
             u_lat = st.number_input("Lat", 41.0, 44.5, 42.697, 0.001, format="%.4f", key="u_lat")

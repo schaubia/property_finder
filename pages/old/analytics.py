@@ -64,7 +64,7 @@ def render(lang: str = "bg"):
         fig = px.bar(city_avg, x="avg_price", y="city", orientation="h",
                      title=tr("c_city", lang),
                      color="avg_sqm", color_continuous_scale="Blues",
-                     labels={"avg_price": tr("price_axis",lang), "city": tr("city_axis",lang), "avg_sqm":"€/m²"},
+                     labels={"avg_price":"€","city":"","avg_sqm":"€/m²"},
                      text=city_avg["avg_price"].apply(lambda x:f"€{x:,.0f}"))
         fig.update_layout(height=350, margin=dict(t=40,b=10),
                           paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)")
@@ -90,7 +90,7 @@ def render(lang: str = "bg"):
                           size="price_per_sqm", opacity=0.7,
                           hover_data=["type_bg","neighborhood","construction_type"],
                           title=tr("c_scat", lang),
-                          labels={"area_sqm": tr("area_axis",lang), "price_eur": tr("price_axis",lang), "city": tr("city_axis",lang)})
+                          labels={"area_sqm":"m²","price_eur":"€","city":""})
         fig3.update_layout(height=350, margin=dict(t=40,b=10),
                            paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)")
         st.plotly_chart(fig3, width="stretch", key="anal_fig3")
@@ -99,7 +99,7 @@ def render(lang: str = "bg"):
         fig4 = px.box(df, x="construction_type", y="price_per_sqm",
                       color="construction_type",
                       title=tr("c_box", lang),
-                      labels={"construction_type": tr("constr_axis",lang), "price_per_sqm":"€/m²"},
+                      labels={"construction_type":"","price_per_sqm":"€/m²"},
                       color_discrete_sequence=px.colors.qualitative.Pastel)
         fig4.update_layout(height=350, margin=dict(t=40,b=10), showlegend=False,
                            paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)")
@@ -108,7 +108,7 @@ def render(lang: str = "bg"):
     c5, c6 = st.columns(2)
     with c5:
         fig5 = px.histogram(df, x="price_eur", nbins=30, title=tr("c_hist", lang),
-                            labels={"price_eur": tr("price_axis",lang), "count": tr("nr_l",lang)},
+                            labels={"price_eur":"€","count":tr("nr_l",lang)},
                             color_discrete_sequence=["#1a5a8a"])
         fig5.update_layout(height=300, margin=dict(t=40,b=10),
                            paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)")
@@ -122,7 +122,7 @@ def render(lang: str = "bg"):
         fig6 = px.bar(fs, x="count", y="feature", orientation="h",
                       title=tr("c_feat", lang), color="count",
                       color_continuous_scale="Teal",
-                      labels={"count": tr("nr_l",lang), "feature": tr("feature_axis",lang)})
+                      labels={"count":tr("nr_l",lang),"feature":tr("ch_l",lang)})
         fig6.update_layout(height=300, margin=dict(t=40,b=10), showlegend=False,
                            paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)")
         st.plotly_chart(fig6, width="stretch", key="anal_fig6")

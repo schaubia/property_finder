@@ -33,11 +33,6 @@ L = {
     "gc_warn":   {"bg": "Моля, въведете текст.", "en": "Please enter some text."},
     "how_it":    {"bg": "💡 Как работи геокодирането?", "en": "💡 How does geocoding work?"},
     "how_txt":   {
-    "unknown_nbh": {"bg": "Неизвестен", "en": "Unknown"},
-    "city_col":    {"bg": "Град", "en": "City"},
-    "nbh_col":     {"bg": "Квартал", "en": "Neighborhood"},
-    "type_col":    {"bg": "Тип", "en": "Type"},
-
         "bg": "Системата търси: **Град** (гр. София), **Квартал** (кв. Лозенец), **Ключови думи** (Слънчев бряг, Банско…). Координатите се изчисляват по известни центрове + отместване за квартала.",
         "en": "The system looks for: **City** (гр. Sofia), **Neighborhood** (кв. Lozenets), **Keywords** (Sunny Beach, Bansko…). Coordinates are calculated from known city centres + neighborhood offsets."
     },
@@ -131,9 +126,9 @@ def render(lang: str = "bg"):
         st.markdown(f"**{len(filt)} {tr('on_map', lang)}**")
         show_cols = ["city","neighborhood","type_bg","area_sqm","price_eur","price_per_sqm"]
         renamed = {
-            "city": tr('city_col', lang),
-            "neighborhood": tr('nbh_col', lang),
-            "type_bg": tr('type_col', lang),
+            "city": "Град" if lang=="bg" else "City",
+            "neighborhood": "Квартал" if lang=="bg" else "Neighborhood",
+            "type_bg": "Тип" if lang=="bg" else "Type",
             "area_sqm": "м²",
             "price_eur": "€",
             "price_per_sqm": "€/м²"
