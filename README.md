@@ -1,6 +1,6 @@
 # 🏠 БГ Имоти | BG Property Finder
 
-A bilingual (🇧🇬 Bulgarian / 🇬🇧 English) Streamlit application for searching, analysing and financing real estate in Bulgaria. Built for both local buyers and foreign investors.
+Streamlit application for searching, analysing and financing real estate in Bulgaria. Built for both local buyers and foreign investors.
 
 ---
 
