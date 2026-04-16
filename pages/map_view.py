@@ -33,14 +33,13 @@ L = {
     "gc_warn":   {"bg": "Моля, въведете текст.", "en": "Please enter some text."},
     "how_it":    {"bg": "💡 Как работи геокодирането?", "en": "💡 How does geocoding work?"},
     "how_txt":   {
+        "bg": "Системата търси: **Град** (гр. София), **Квартал** (кв. Лозенец), **Ключови думи** (Слънчев бряг, Банско…). Координатите се изчисляват по известни центрове + отместване за квартала.",
+        "en": "The system looks for: **City** (гр. Sofia), **Neighborhood** (кв. Lozenets), **Keywords** (Sunny Beach, Bansko…). Coordinates are calculated from known city centres + neighborhood offsets."
+    },
     "unknown_nbh": {"bg": "Неизвестен", "en": "Unknown"},
     "city_col":    {"bg": "Град", "en": "City"},
     "nbh_col":     {"bg": "Квартал", "en": "Neighborhood"},
     "type_col":    {"bg": "Тип", "en": "Type"},
-
-        "bg": "Системата търси: **Град** (гр. София), **Квартал** (кв. Лозенец), **Ключови думи** (Слънчев бряг, Банско…). Координатите се изчисляват по известни центрове + отместване за квартала.",
-        "en": "The system looks for: **City** (гр. Sofia), **Neighborhood** (кв. Lozenets), **Keywords** (Sunny Beach, Bansko…). Coordinates are calculated from known city centres + neighborhood offsets."
-    },
 }
 
 EXAMPLE_TEXTS = [
