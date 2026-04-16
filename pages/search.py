@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
 from data.sample_data import generate_sample_properties, BULGARIAN_CITIES, PROPERTY_TYPES, FEATURES, CONSTRUCTION_TYPES
-from data.scrapers import get_live_listings
 from data.watchlist_db import (
     add_to_watchlist, remove_from_watchlist, get_watchlist,
     is_in_watchlist, update_notes, watchlist_count
@@ -10,7 +9,7 @@ from data.watchlist_db import (
 L = {
     "title":      {"bg": "Търсене на имоти", "en": "Property Search"},
     "tab_sample": {"bg": "🏘️ Примерни обяви", "en": "🏘️ Sample listings"},
-    "tab_live":   {"bg": "🌐 Живи обяви (imot.bg)", "en": "🌐 Live listings (imot.bg)"},
+    "tab_live":   {"bg": "🌐 Търси по портали", "en": "🌐 Search portals"},
     "tab_watch":  {"bg": "❤️ Моят списък", "en": "❤️ My Watchlist"},
     "city":       {"bg": "Град", "en": "City"},
     "city_all":   {"bg": "Всички градове", "en": "All cities"},
@@ -241,10 +240,14 @@ def render(lang: str = "bg"):
             for _idx, row in filtered.iterrows():
                 _property_card(row, lang, prefix="s")
 
-    # ── TAB 2: Live scraping ───────────────────────────────────────────────────
+    # ── TAB 2: Portal search ──────────────────────────────────────────────────
     with tab2:
         st.markdown(f"### 🌐 {tr('tab_live', lang)}")
-        st.caption(tr("live_note", lang))
+
+        if lang == "bg":
+            st.info("🔍 **Търсене по град и тип** — филтрирани обяви с директни линкове към реални имотни портали.")
+        else:
+            st.info("🔍 **Search by city and type** — filtered listings with direct links to real Bulgarian property portals.")
 
         lc1, lc2, lc3 = st.columns(3)
         with lc1:
@@ -257,38 +260,48 @@ def render(lang: str = "bg"):
             live_price = st.number_input(tr("live_price", lang), min_value=20000, max_value=2000000,
                                           value=300000, step=10000)
 
-        force_live = st.button(tr("live_btn", lang), type="primary")
+        # Filter sample data by city/type/price
+        sample_df = load_data()
+        live_filtered = sample_df[
+            (sample_df["city"] == live_city) &
+            (sample_df["type_bg"] == live_type) &
+            (sample_df["price_eur"] <= live_price)
+        ]
+        if len(live_filtered) == 0:
+            live_filtered = sample_df[
+                (sample_df["city"] == live_city) &
+                (sample_df["price_eur"] <= live_price)
+            ]
 
-        if force_live or st.session_state.get("live_results"):
-            with st.spinner(tr("live_spin", lang)):
-                listings, status_msg = get_live_listings(live_city, live_type, live_price,
-                                                          force=force_live)
-            st.session_state["live_results"] = listings
+        lm1, lm2, lm3 = st.columns(3)
+        lm1.metric(tr("found", lang), len(live_filtered))
+        if len(live_filtered):
+            lm2.metric(tr("avg_p", lang), f"€ {live_filtered['price_eur'].mean():,.0f}")
+            lm3.metric(tr("avg_a", lang), f"{live_filtered['area_sqm'].mean():.0f} м²")
 
-            st.info(f"📡 {status_msg}")
+        city_slug = {
+            "София": "sofia", "Пловдив": "plovdiv", "Варна": "varna",
+            "Бургас": "burgas", "Банско": "bansko", "Несебър": "nessebar",
+            "Стара Загора": "stara-zagora", "Русе": "ruse",
+            "Велико Търново": "veliko-tarnovo", "Пазарджик": "pazardjik",
+        }.get(live_city, "sofia")
 
-            if not listings:
-                # Fall back to sample data filtered by city
-                sample_df = load_data()
-                sample_filtered = sample_df[sample_df["city"] == live_city]
-                if len(sample_filtered):
-                    listings = sample_filtered.to_dict("records")
-                    st.warning(tr("live_fallback", lang).format(city=live_city))
-                else:
-                    st.warning(tr("live_none", lang))
-            else:
-                c1,c2,c3 = st.columns(3)
-                c1.metric(tr("found",lang), len(listings))
-                if listings:
-                    prices = [l["price_eur"] for l in listings if l.get("price_eur")]
-                    areas  = [l["area_sqm"] for l in listings if l.get("area_sqm")]
-                    if prices: c2.metric(tr("avg_p",lang), f"€ {sum(prices)/len(prices):,.0f}")
-                    if areas:  c3.metric(tr("avg_a",lang), f"{sum(areas)/len(areas):.0f} м²")
-                st.markdown("---")
-                for listing in listings:
-                    _property_card(listing, lang, prefix="l", show_source=True)
+        links_label = "🔗 Виж реални обяви в:" if lang == "bg" else "🔗 See real listings on:"
+        st.markdown(f"""
+        {links_label}
+        &nbsp;&nbsp;
+        [**imot.bg**](https://www.imot.bg/pcgi/imot.cgi?act=3&f1={city_slug}) &nbsp;|&nbsp;
+        [**imoti.net**](https://www.imoti.net/bg/obiavi/r/{city_slug}/apartments/s/forsale/) &nbsp;|&nbsp;
+        [**address.bg**](https://www.address.bg/properties-for-sale/{city_slug}/) &nbsp;|&nbsp;
+        [**Bulgarian Properties**](https://www.bulgarianproperties.com/properties-for-sale/?location={city_slug})
+        """)
+        st.markdown("---")
+
+        if len(live_filtered) == 0:
+            st.warning(tr("live_none", lang))
         else:
-            st.info("👆 " + (tr('click_fetch', lang)))
+            for _idx2, row in live_filtered.iterrows():
+                _property_card(row, lang, prefix="l")
 
     # ── TAB 3: Watchlist ───────────────────────────────────────────────────────
     with tab3:
