@@ -32,10 +32,15 @@ L = {
     "cn_l":    {"bg": "Конструкция", "en": "Construction"},
     "dy_l":    {"bg": "Дни", "en": "Days"},
     "nr_l":    {"bg": "Брой обяви", "en": "No. listings"},
-    "ch_l":    {"bg": "Характеристика", "en": "Feature"},
+    "ch_l":      {"bg": "Характеристика", "en": "Feature"},
+    "price_axis": {"bg": "€", "en": "€"},
+    "city_axis":  {"bg": "Град", "en": "City"},
+    "area_axis":  {"bg": "м²", "en": "m²"},
+    "constr_axis":{"bg": "Конструкция", "en": "Construction"},
+    "feature_axis":{"bg": "Характеристика", "en": "Feature"},
 }
 
-def tr(k, l): return L[k][l]
+def tr(k, l): return L.get(k, {}).get(l, L.get(k, {}).get("en", k))
 
 
 @st.cache_data

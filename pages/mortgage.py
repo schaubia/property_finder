@@ -88,7 +88,7 @@ L = {
     "pdf_gen":    {"bg": "Генерирам PDF…", "en": "Generating PDF…"},
 }
 
-def tr(k, l): return L[k][l]
+def tr(k, l): return L.get(k, {}).get(l, L.get(k, {}).get("en", k))
 
 
 def render(lang: str = "bg"):

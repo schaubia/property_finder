@@ -52,7 +52,11 @@ L = {
     "live_none":  {"bg": "Не бяха намерени обяви. Опитайте с различни параметри.",
                    "en": "No listings found. Try different parameters."},
     "live_src":   {"bg": "Източник", "en": "Source"},
-    "live_note":  {"bg": "⚠️ Реалният скрейпинг зависи от структурата на сайта. Резултатите могат да варират.",
+    "live_note":  {"bg": "⚠️ Реалният скрейпинг зависи от достъпността на сайта. При липса на резултати се показват примерни обяви за избрания град.",
+                   "en": "⚠️ Live scraping depends on site availability. If no results, sample listings for the selected city are shown."},
+    "live_fallback": {"bg": "ℹ️ Не бяха намерени живи обяви — показват се примерни обяви за {city}.",
+                      "en": "ℹ️ No live listings found — showing sample listings for {city}."},
+    "live_old_note": {"bg": "⚠️ Реалният скрейпинг зависи от структурата на сайта. Резултатите могат да варират.",
                    "en": "⚠️ Live scraping depends on the site structure. Results may vary."},
     # watchlist tab
     "wl_empty":   {"bg": "Списъкът е празен. Добавете имоти с бутона ❤️.",
@@ -73,7 +77,7 @@ L = {
 
 }
 
-def tr(k, l): return L[k][l]
+def tr(k, l): return L.get(k, {}).get(l, L.get(k, {}).get("en", k))
 
 
 @st.cache_data
@@ -264,7 +268,14 @@ def render(lang: str = "bg"):
             st.info(f"📡 {status_msg}")
 
             if not listings:
-                st.warning(tr("live_none", lang))
+                # Fall back to sample data filtered by city
+                sample_df = load_data()
+                sample_filtered = sample_df[sample_df["city"] == live_city]
+                if len(sample_filtered):
+                    listings = sample_filtered.to_dict("records")
+                    st.warning(tr("live_fallback", lang).format(city=live_city))
+                else:
+                    st.warning(tr("live_none", lang))
             else:
                 c1,c2,c3 = st.columns(3)
                 c1.metric(tr("found",lang), len(listings))

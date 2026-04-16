@@ -56,7 +56,7 @@ TYPE_COLORS = {
     "Офис": [149, 165, 166], "Гараж": [127, 140, 141],
 }
 
-def tr(k, l): return L[k][l]
+def tr(k, l): return L.get(k, {}).get(l, L.get(k, {}).get("en", k))
 
 
 @st.cache_data
